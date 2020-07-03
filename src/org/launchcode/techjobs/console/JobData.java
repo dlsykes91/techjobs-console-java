@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -66,7 +67,7 @@ public class JobData {
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
-
+      value = value.toLowerCase();
         // load data, if not already loaded
         loadData();
 
@@ -75,6 +76,7 @@ public class JobData {
         for (HashMap<String, String> row : allJobs) {
 
             String aValue = row.get(column);
+            aValue = aValue.toLowerCase();
 
             if (aValue.contains(value)) {
                 jobs.add(row);
@@ -123,6 +125,37 @@ public class JobData {
             System.out.println("Failed to load job data");
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+
+        value = value.toLowerCase();
+
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+            Collection<String> rowValues = row.values();
+
+            // create arraylist of lowercase values
+            ArrayList <String > lowercase = new ArrayList<>();
+            for (String i: rowValues){
+                i = i.toLowerCase();
+                lowercase.add(i);
+            }
+
+            for (String target : lowercase) {
+
+                if (target.contains(value) && !jobs.contains(row)) {
+                    jobs.add(row);
+                }
+
+            }
+
+        }
+
+        return jobs;
     }
 
 }
